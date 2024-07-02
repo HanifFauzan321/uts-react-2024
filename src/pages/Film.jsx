@@ -261,10 +261,10 @@ export default function Film() {
                 className="border border-gray-300 p-2 mb-4 w-full"
                 type="text"
                 id="image"
-                value={null}
+                value={addFilm.image}
                 onChange={(e) =>
                   setAddFilm({
-                    ...updateFilm,
+                    ...addFilm,
                     image: e.target.value,
                   })
                 }
