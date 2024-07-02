@@ -68,6 +68,9 @@ export default function Film() {
       } else {
         return a[sortBy] > b[sortBy] ? -1 : 1;
       }
+    }).filter((item) => {
+      //INCLUDES memeriksa apakah suatu array atau string berisi nilai atau substring tertentu
+      return item.name.toLowerCase().includes(search.toLowerCase());
     });
 
   function handleDelete(data) {
