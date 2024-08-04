@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scrollbar-width: none; /* Chrome */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
 #root{
   margin: 0;
   padding: 0;
@@ -12,7 +17,9 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: black;
+  background-image: url('src/images/Background.jpg');
+  background-size: 120%;
+  background-repeat: no-repeat;
 }
 
 .full {

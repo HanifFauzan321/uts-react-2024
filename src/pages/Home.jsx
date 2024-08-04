@@ -5,16 +5,16 @@ export default function Home() {
         <div>
           <img
             className="home-image flex-wrap h-full w-full"
-            src="src/images/movie-background-collage.jpg"
+            src="src/images/Background.jpg"
             alt=""
           />
         </div>
       </div>
       <div className="absolute top-1/2 left-20 transform text-white text-4xl">
-        <h2>Selamat datang di website Film React</h2>
+        <h2 className="text-fuchsia-600 font-bold text-5xl italic">Selamat datang di website PhoneStore</h2>
         <p>
-          Website sederhana yang berisikan Film - Film yang menarik 
-          <p>Selamat Menonton</p>
+          Website place store sederhana yang berisikan Handphone / SmartPhone yang menarik 
+          <p>Selamat Berbelanja</p>
         </p>
       </div>
     </>

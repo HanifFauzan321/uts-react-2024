@@ -10,47 +10,42 @@ import { Info } from "lucide-react";
 let initialProducts = [
   {
     id: 1,
-    name: "Frozen",
-    duration: 120,
+    name: "Samsung Galaxy S21",
+    price: 999,
     image:
-      "https://tse4.mm.bing.net/th?id=OIP.umm7papnieDYkn95pgJVIgHaEo&pid=Api&P=0&h=180",
+      "https://tse4.mm.bing.net/th?id=OIP.samsung-galaxy-s21&pid=Api&P=0&h=180",
   },
   {
     id: 2,
-    name: "Spiderman",
-    duration: 90,
-    image:
-      "https://tse2.mm.bing.net/th?id=OIP.CCqoXq2zh9yXjo6LYQbusQAAAA&pid=Api&P=0&h=180",
+    name: "iPhone 12",
+    price: 1099,
+    image: "https://tse4.mm.bing.net/th?id=OIP.iphone-12&pid=Api&P=0&h=180",
   },
   {
     id: 3,
-    name: "Mario Bross",
-    duration: 120,
+    name: "Vivo V20",
+    price: 699,
     image:
-      "https://tse1.mm.bing.net/th?id=OIP.fxDUMakGNNPNmwP_sysnwwHaLZ&pid=Api&P=0&h=180",
+      "https://tse4.mm.bing.net/th?id=OIP.google-pixel-5&pid=Api&P=0&h=180",
   },
   {
     id: 4,
-    name: "Sonic",
-    duration: 75,
-    image:
-      "https://tse2.mm.bing.net/th?id=OIP.pkKY6gUnq5iWygMuyf6ncwHaEK&pid=Api&P=0&h=180",
+    name: "iPhone 11 Series",
+    price: 729,
+    image: "https://cdn.jagofon.com/otf/pt_wlpWkxe93FFGKPdc6gXE6pXSO95AU9mr8MRCLg-U/t:10/w:320/f:avif/q:60/aHR0cHM6Ly9jZG4uamFnb2Zvbi5jb20vbW9ja2RhdGEvcHJvZHVjdC1tb2RlbHMvaXBob25lLTExLnBuZw",
   },
   {
     id: 5,
-    name: "One Piece",
-    duration: 110,
-    image:
-      "https://tse2.mm.bing.net/th?id=OIP.ZensBZxyAJTAuR7qeFpsiwHaEK&pid=Api&P=0&h=180",
+    name: "Poco X3 Pro",
+    price: 749,
+    image: "https://cdn.jagofon.com/otf/hPCp4yxQMhmVihHx0B7U6Tje0yBMAbHmyj7Hvfv3kQo/t:10/w:320/f:avif/q:60/aHR0cHM6Ly9jZG4uamFnb2Zvbi5jb20vbW9kZWwvVkV4OUpkRnA3bjZJYzh0d1hmMWh0WDlOVTdUdW5pc2dKTjNTUDhheS5qcGc",
   },
 ];
 
-const savedSorted = localStorage.getItem("film");
+// const savedSorted = localStorage.getItem("film");
 
 export default function Film() {
-  const [film, setFilm] = useState(
-    savedSorted ? JSON.parse(savedSorted) : initialProducts
-  );
+  const [film, setFilm] = useState([]);
   const [updateFilm, setUpdateFilm] = useState(null);
   const [addFilm, setAddFilm] = useState(null);
   const [orderBy, setOrderBy] = useState("asc");
@@ -58,8 +53,10 @@ export default function Film() {
   const [search, setSearch] = useState("");
 
   const showInfo = (data) => {
-    alert(` Name          : ${data.name} \n Duration            : ${data.duration} minute`);
-  }
+    alert(
+      ` Name          : ${data.name} \n price            : ${data.price} minute`
+    );
+  };
 
   const filterData = film
     .sort((a, b) => {
@@ -68,7 +65,8 @@ export default function Film() {
       } else {
         return a[sortBy] > b[sortBy] ? -1 : 1;
       }
-    }).filter((item) => {
+    })
+    .filter((item) => {
       //INCLUDES memeriksa apakah suatu array atau string berisi nilai atau substring tertentu
       return item.name.toLowerCase().includes(search.toLowerCase());
     });
@@ -92,12 +90,15 @@ export default function Film() {
   }
 
   useEffect(() => {
-    localStorage.setItem("film", JSON.stringify(film));
-  }),
-    [film];
+    const storage = JSON.parse(localStorage.getItem("film")) || initialProducts;
+    setFilm(storage);
+    if (storage.length === 0) {
+      localStorage.setItem("film", JSON.stringify(initialProducts));
+    }
+  }, []);
 
   return (
-    <div className="w-full h-full full bg-white">
+    <div className="w-full h-full full bg-contain">
       <div className="flex w-full items-center p-3">
         <div className="p-3 flex w-1/4 gap-2 justify-center">
           <button
@@ -127,7 +128,7 @@ export default function Film() {
           >
             <option value="id">Normal</option>
             <option value="name">Name</option>
-            <option value="duration">duration</option>
+            <option value="price">price</option>
           </select>
         </label>
         <label htmlFor="">
@@ -142,27 +143,27 @@ export default function Film() {
           </select>
         </label>
       </div>
-      <div className="flex flex-wrap justify-center items-center gap-6 bg-red-900 p-5 mx-20 rounded-xl">
+      <div className="flex flex-wrap justify-center items-center gap-6 bg-fuchsia-400 bg-opacity-60 p-5 mx-20 rounded-xl">
         {filterData.map((data) => (
-          <div className=" bg-slate-900 p-5 rounded-lg" key={data.id}>
+          <div className=" bg-white w-1/4 p-5 rounded-lg " key={data.id}>
             <div className="flex flex-col flex-wrap">
-              <p className="m-3 font-black text-white text-center uppercase">
+              <p className="m-3 font-black text-black text-center uppercase">
                 {data.name}
               </p>
-              <img className="w-32 h-32" src={data.image} alt="" />
+              <img className=" h-40" src={data.image} alt="" />
               <p className="m-3 text-center bg-blue-300">
-                {data.duration + " Minute"}
+                {"Rp. " + data.price}
               </p>
             </div>
             <div className="flex justify-center gap-2">
               <button onClick={() => handleDelete(data)}>
-                <Trash className="text-white" />
+                <Trash className="text-black" />
               </button>
               <button onClick={() => showInfo(data)}>
-                <Info className="text-white" />
+                <Info className="text-black" />
               </button>
               <button className="" onClick={() => setUpdateFilm(data)}>
-                <SquarePen className="text-white" />
+                <SquarePen className="text-black" />
               </button>
             </div>
           </div>
@@ -187,16 +188,16 @@ export default function Film() {
                   setUpdateFilm({ ...updateFilm, name: e.target.value })
                 }
               />
-              <label>duration : </label>
+              <label>price : </label>
               <input
                 className="border border-gray-300 p-2 mb-4 w-full"
                 type="number"
-                id="duration"
-                value={updateFilm.duration}
+                id="price"
+                value={updateFilm.price}
                 onChange={(e) =>
                   setUpdateFilm({
                     ...updateFilm,
-                    duration: parseInt(e.target.value),
+                    price: parseInt(e.target.value),
                   })
                 }
               />
@@ -227,7 +228,7 @@ export default function Film() {
           </div>
         </div>
       )}
-      {addFilm !=null && (
+      {addFilm != null && (
         <div className="fixed z-10 inset-0 items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-3 w-1/2">
             <form
@@ -243,19 +244,19 @@ export default function Film() {
                 id="name"
                 value={addFilm.name}
                 onChange={(e) =>
-                  setAddFilm({ ...addFilm, name: e.target.value,})
+                  setAddFilm({ ...addFilm, name: e.target.value })
                 }
               />
-              <label>duration : </label>
+              <label>price : </label>
               <input
                 className="border border-gray-300 p-2 mb-4 w-full"
                 type="number"
-                id="duration"
-                value={addFilm.duration}
+                id="price"
+                value={addFilm.price}
                 onChange={(e) =>
                   setAddFilm({
                     ...addFilm,
-                    duration: parseInt(e.target.value,),
+                    price: parseInt(e.target.value),
                   })
                 }
               />
