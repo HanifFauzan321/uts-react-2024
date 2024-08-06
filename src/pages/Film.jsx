@@ -6,6 +6,11 @@ import { useEffect } from "react";
 import { List } from "lucide-react";
 import { AlignVerticalSpaceAroundIcon } from "lucide-react";
 import { Info } from "lucide-react";
+import { createContext } from "react";
+import { SquarePlusIcon } from "lucide-react";
+import Cart from "../components/Cart";
+
+
 
 let initialProducts = [
   {
@@ -13,20 +18,20 @@ let initialProducts = [
     name: "Samsung Galaxy S21",
     price: 999,
     image:
-      "https://tse4.mm.bing.net/th?id=OIP.samsung-galaxy-s21&pid=Api&P=0&h=180",
+      "https://images-cdn.ubuy.co.id/657f3ad5982427536415d953-like-new-samsung-galaxy-s21-5g-sm-g991u1.jpg",
   },
   {
     id: 2,
     name: "iPhone 12",
     price: 1099,
-    image: "https://tse4.mm.bing.net/th?id=OIP.iphone-12&pid=Api&P=0&h=180",
+    image: "https://images.tokopedia.net/img/cache/700/OJWluG/2022/2/14/a28bbeb4-5c1a-4c33-a93e-f906b8ebbd87.jpg.webp?ect=4g",
   },
   {
     id: 3,
     name: "Vivo V20",
     price: 699,
     image:
-      "https://tse4.mm.bing.net/th?id=OIP.google-pixel-5&pid=Api&P=0&h=180",
+      "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1600852507295/11efe9b83257b8182cc11947c4f522e8.png",
   },
   {
     id: 4,
@@ -43,6 +48,8 @@ let initialProducts = [
 ];
 
 // const savedSorted = localStorage.getItem("film");
+export const CartContext = createContext();
+
 
 export default function Film() {
   const [film, setFilm] = useState([]);
@@ -51,10 +58,16 @@ export default function Film() {
   const [orderBy, setOrderBy] = useState("asc");
   const [sortBy, setSortBy] = useState("id");
   const [search, setSearch] = useState("");
+  const [count, setCount] = useState(0);
+  const [cart, setCart] = useState([]);
+
+  const addToCart = (item) => {
+    setCart([...cart, item]);
+  };
 
   const showInfo = (data) => {
     alert(
-      ` Name          : ${data.name} \n price            : ${data.price} minute`
+      ` Name          : ${data.name} \n price            : Rp. ${data.price}`
     );
   };
 
@@ -74,11 +87,13 @@ export default function Film() {
   function handleDelete(data) {
     if (window.confirm("Apakah kamu yakin hapus ini?")) {
       setFilm(film.filter((p) => p.id !== data.id));
+      localStorage.setItem("film", JSON.stringify(film.filter((p) => p.id !== data.id)));
     }
   }
 
   function handleUpdate() {
     setFilm(film.map((a) => (a.id === updateFilm.id ? updateFilm : a)));
+    localStorage.setItem("film", JSON.stringify(film.map((a) => (a.id === updateFilm.id ? updateFilm : a))));
     setUpdateFilm(null);
     console.log(setUpdateFilm);
   }
@@ -86,7 +101,9 @@ export default function Film() {
   function handleNewFilm() {
     const newId = film.length > 0 ? Math.max(...film.map((p) => p.id)) + 1 : 1;
     setFilm([...film, { ...addFilm, id: newId }]);
+    localStorage.setItem("film",JSON.stringify([...film, { ...addFilm, id: newId }]));
     setAddFilm(null);
+
   }
 
   useEffect(() => {
@@ -98,6 +115,7 @@ export default function Film() {
   }, []);
 
   return (
+    <CartContext.Provider value={{count,cart}}>
     <div className="w-full h-full full bg-contain">
       <div className="flex w-full items-center p-3">
         <div className="p-3 flex w-1/4 gap-2 justify-center">
@@ -120,28 +138,32 @@ export default function Film() {
           />
         </div>
         <label htmlFor="">
-          <List className="m-auto" />
+          <List className="m-auto text-white bg" />
           <select
-            className="cursor-pointer"
+            className="cursor-pointer bg-transparent text-white"
             value={sortBy}
             onChange={(x) => setSortBy(x.target.value)}
           >
-            <option value="id">Normal</option>
-            <option value="name">Name</option>
-            <option value="price">price</option>
+            <option value="id" className="bg-black">Normal</option>
+            <option value="name" className="bg-black">Name</option>
+            <option value="price" className="bg-black">price</option>
           </select>
         </label>
         <label htmlFor="">
-          <AlignVerticalSpaceAroundIcon className="m-auto" />
+          <AlignVerticalSpaceAroundIcon className="m-auto text-white" />
           <select
-            className="cursor-pointer"
+            className="cursor-pointer bg-transparent text-white"
             value={orderBy}
             onChange={(x) => setOrderBy(x.target.value)}
           >
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
+            <option value="asc" className="bg-black" >Ascending</option>
+            <option value="desc" className="bg-black">Descending</option>
           </select>
         </label>
+        <label htmlFor="" >
+          <Cart/>
+        </label>
+
       </div>
       <div className="flex flex-wrap justify-center items-center gap-6 bg-fuchsia-400 bg-opacity-60 p-5 mx-20 rounded-xl">
         {filterData.map((data) => (
@@ -164,6 +186,13 @@ export default function Film() {
               </button>
               <button className="" onClick={() => setUpdateFilm(data)}>
                 <SquarePen className="text-black" />
+              </button>
+              
+              <button onClick={() => {
+                setCount(count + 1);
+                addToCart(data);
+              }}>
+                  <SquarePlusIcon/>
               </button>
             </div>
           </div>
@@ -288,5 +317,7 @@ export default function Film() {
         </div>
       )}
     </div>
+    </CartContext.Provider>
+
   );
 }
